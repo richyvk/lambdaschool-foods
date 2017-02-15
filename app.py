@@ -53,7 +53,30 @@ def favourite(food):
         pass
     finally:
         if foods:
-            favs_json = {"favourites": [dict(found_food) for found_food in foods]}
+            favs_json = {"favourites":
+                         [dict(found_food) for found_food in foods]}
+            return jsonify(favs_json)
+        else:
+            return jsonify("null")
+
+
+@app.route('/search/')
+def search():
+    search = request.args.get('name').lower()
+
+    try:
+        conn = sqlite3.connect(DB)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM foods WHERE name=?', search)
+        results = cur.fetchall()
+        conn.close()
+    except:
+        pass
+    finally:
+        if results:
+            favs_json = {"favourites":
+                         [dict(found_food) for found_food in results]}
             return jsonify(favs_json)
         else:
             return jsonify("null")

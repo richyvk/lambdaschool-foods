@@ -20,11 +20,11 @@ def enter_new():
 @app.route('/addfood/', methods=['POST'])
 def add_food():
     try:
-        food = (request.form['name'],
+        food = (request.form['name'].lower(),
                 request.form['calories'],
-                request.form['cuisine'],
-                request.form['is_vegetarian'],
-                request.form['is_gluten_free'], )
+                request.form['cuisine'].lower(),
+                request.form['is_vegetarian'].lower(),
+                request.form['is_gluten_free'].lower(), )
 
         conn = sqlite3.connect(DB)
         cur = conn.cursor()
@@ -40,7 +40,7 @@ def add_food():
 
 @app.route('/favourite/<food>')
 def favourite(food):
-    fav_food = (food, )
+    fav_food = (food.lower(), )
 
     try:
         conn = sqlite3.connect(DB)
@@ -52,5 +52,8 @@ def favourite(food):
     except:
         pass
     finally:
-        favs_json = {"favourites": [dict(found_food) for found_food in foods]}
-        return jsonify(favs_json)
+        if foods:
+            favs_json = {"favourites": [dict(found_food) for found_food in foods]}
+            return jsonify(favs_json)
+        else:
+            return jsonify("null")

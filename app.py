@@ -80,3 +80,17 @@ def search():
             return jsonify(favs_json)
         else:
             return jsonify("null")
+
+
+@app.route('/drop/')
+def drop():
+    try:
+        conn = sqlite3.connect(DB)
+        cur = conn.cursor()
+        cur.execute('DROP TABLE IF EXISTS foods')
+        conn.commit()
+        conn.close()
+    except:
+        pass
+    finally:
+        return 'dropped'

@@ -62,7 +62,7 @@ def favourite(food):
 
 @app.route('/search/')
 def search():
-    search = request.args.get('name').lower()
+    search = (request.args.get('name').lower(), )
 
     try:
         conn = sqlite3.connect(DB)
